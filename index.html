@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinFlow — A memory layer for your financial life.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --canvas:#F7F7F7;
+  --card:#FFFFFF;
+  --ink:#121212;
+  --hair:#E5E5E5;
+  --grid:#E0E0E0;
+  --muted:#888888;
+  --green:#00C853;
+  --red:#E50000;
+  --ai:#FFCC00;
+  --silver:#A8B6C2;
+  --discord:#5865F2;
+  --serif:'Instrument Serif', Georgia, serif;
+  --sans:'Inter', -apple-system, sans-serif;
+  --mono:'Roboto Mono', ui-monospace, monospace;
+  --r:24px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--canvas);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ============ SIGNATURE GRID ============ */
+.grid-bg{
+  position:absolute;
+  top:0;left:0;
+  width:100%;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+  background-color:var(--canvas);
+  background-image:
+    linear-gradient(var(--grid) 0.5px, transparent 0.5px),
+    linear-gradient(90deg, var(--grid) 0.5px, transparent 0.5px);
+  background-size:130px 130px, 130px 130px;
+  background-position:0 0, 0 0;
+}
+/* tri-color + bands (yellow / green / pink) layered over the lines */
+.grid-band{position:absolute;left:0;width:100%;background-repeat:repeat;background-size:130px 130px}
+
+/* ============ LAYOUT ============ */
+.shell{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:0 40px}
+section{position:relative}
+
+/* eyebrow */
+.eyebrow{
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:500;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  color:var(--muted);
+}
+.mono{font-family:var(--mono);font-feature-settings:"tnum"}
+.serif{font-family:var(--serif);font-weight:400;letter-spacing:-1px;line-height:1.05}
+.pos{color:var(--green)}
+.neg{color:var(--red)}
+
+/* card base */
+.card{
+  background:rgba(255,255,255,0.82);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+  border:1px solid var(--hair);
+  border-radius:var(--r);
+  transition:border-color .35s ease;
+}
+.card:hover{border-color:var(--ink)}
+
+/* buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--sans);font-size:15px;font-weight:500;
+  border-radius:100px;
+  padding:14px 26px;
+  cursor:pointer;border:1px solid transparent;
+  text-decoration:none;
+  transition:border-color .35s ease, background .35s ease, color .35s ease;
+}
+.btn-primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn-primary:hover{background:#000}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--hair)}
+.btn-ghost:hover{border-color:var(--ink)}
+
+/* ============ NAV ============ */
+.nav{
+  position:relative;z-index:3;
+  display:flex;align-items:center;justify-content:space-between;
+  height:88px;
+}
+.wordmark{
+  font-family:var(--serif);font-weight:400;font-size:30px;
+  letter-spacing:-.5px;color:var(--ink);line-height:1;
+  text-decoration:none;
+}
+.discord-link{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ink);
+  text-decoration:none;border:1px solid var(--hair);border-radius:100px;
+  padding:10px 18px;transition:border-color .35s ease;background:rgba(255,255,255,.6);
+}
+.discord-link:hover{border-color:var(--ink)}
+.discord-link svg{display:block}
+
+/* ============ HERO ============ */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;padding:64px 0 96px}
+.hero-eyebrow{margin-bottom:28px}
+.hero h1{
+  font-family:var(--serif);font-weight:400;letter-spacing:-1px;
+  font-size:clamp(48px,5.6vw,82px);line-height:1.0;margin-bottom:28px;
+}
+.hero-sub{font-size:18px;line-height:1.55;color:var(--muted);max-width:440px;margin-bottom:36px}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+
+/* ============ HERO CARD DECK ============ */
+.phone-wrap{display:flex;flex-direction:column;justify-content:center}
+.feed-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:0 4px}
+.feed-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:9px}
+.feed-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.feed-count{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.deck{display:flex;flex-direction:column;gap:14px}
+.insight{
+  background:#161618;border:1px solid #2a2a2c;border-radius:24px;
+  padding:24px 26px;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .7s cubic-bezier(.4,0,.2,1), transform .7s cubic-bezier(.4,0,.2,1);
+}
+.insight.in{opacity:1;transform:translateY(0)}
+.insight-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#8a8a90;display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.spark{width:15px;height:15px;color:var(--ai)}
+.insight-body{color:#f4f4f4;font-size:19px;line-height:1.42;font-weight:400;letter-spacing:-.1px}
+.insight-body .amt{font-family:var(--mono);font-weight:500;font-size:.92em}
+.insight-meta{margin-top:18px;padding-top:15px;border-top:1px solid #242426;font-family:var(--mono);font-size:11px;letter-spacing:.5px;color:#76767c;display:flex;justify-content:space-between}
+.dots{display:flex;gap:5px;align-items:center}
+.dots i{width:5px;height:5px;border-radius:50%;background:var(--silver);opacity:.5;display:block;transition:all .4s ease}
+.dots i.on{background:var(--ink);opacity:1;width:16px;border-radius:3px}
+
+/* ============ SECTION HEADER ============ */
+.sec-head{max-width:680px;margin-bottom:44px}
+.sec-head .eyebrow{margin-bottom:18px}
+.sec-head h2{font-family:var(--serif);font-weight:400;letter-spacing:-1px;font-size:clamp(32px,3.6vw,52px);line-height:1.05}
+
+/* ============ LANGUAGE / 3 CARDS ============ */
+.lang{padding-top:40px;padding-bottom:96px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.icard{padding:28px 24px;display:flex;flex-direction:column;min-height:260px}
+.icard .eyebrow{margin-bottom:auto}
+.icard h3{font-family:var(--serif);font-weight:400;letter-spacing:-.5px;font-size:27px;line-height:1.12;margin-top:24px}
+.icard .note{margin-top:18px;font-size:13.5px;color:var(--muted);line-height:1.5}
+.icard .amt-line{margin-top:18px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+
+/* inline sparkline */
+.sparkline{display:inline-block;vertical-align:middle;margin-left:10px}
+
+/* chip */
+.chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;color:var(--ink);border:1px solid var(--hair);border-radius:100px;padding:6px 12px;margin-top:18px;align-self:flex-start;cursor:pointer;transition:border-color .35s ease}
+.chip:hover{border-color:var(--ink)}
+
+/* ============ FEATURE GRID ============ */
+.features{padding-top:40px;padding-bottom:96px}
+.two-two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.fcard{padding:36px 32px}
+.ficon{width:34px;height:34px;stroke:var(--ink);fill:none;stroke-width:1.5;margin-bottom:26px}
+.fcard h3{font-family:var(--serif);font-weight:400;letter-spacing:-.5px;font-size:30px;margin-bottom:14px}
+.fcard p{font-size:15px;color:var(--muted);line-height:1.55;max-width:420px}
+.fcard p .mono{color:var(--ink);font-size:13.5px}
+
+/* ============ FINFLOW MODEL (FLOWLINE + STORIES) ============ */
+.model{padding-top:40px;padding-bottom:40px}
+.model-card{padding:0;overflow:hidden;margin-bottom:24px}
+
+/* --- FlowLine --- */
+.fl-head{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;padding:44px 48px 8px}
+.fl-head .eyebrow{margin-bottom:16px}
+.fl-head h3{font-family:var(--serif);font-weight:400;letter-spacing:-1px;font-size:clamp(30px,3.4vw,46px);line-height:1.05}
+.fl-head p{font-size:15.5px;line-height:1.6;color:var(--muted)}
+.fl-head p strong{color:var(--ink);font-weight:500}
+.fl-stage{padding:8px 32px 12px}
+.flowline{width:100%;height:auto;display:block}
+.fl-line{stroke:var(--ink);stroke-width:1.6;fill:none;stroke-linecap:round}
+.fl-node{fill:#fff;stroke:var(--ink);stroke-width:1.6}
+.fl-node.credit{fill:var(--green);stroke:var(--green)}
+.fl-conn{stroke:#D8D8D8;stroke-width:1;fill:none}
+.fl-icon{stroke:var(--muted);stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.fl-name{font-family:var(--mono);font-size:12px;letter-spacing:1px;fill:var(--ink)}
+.fl-chapter{font-family:var(--mono);font-size:12.5px;font-weight:500;letter-spacing:1.5px;fill:var(--ink)}
+.fl-evlist{font-family:var(--mono);font-size:10.5px;letter-spacing:.4px;fill:var(--muted)}
+.fl-group{fill:none;stroke:#EAEAEA;stroke-width:1}
+.fl-amt{font-family:var(--mono);font-size:14.5px;fill:var(--muted)}
+.fl-amt.neg{fill:var(--red)}
+.fl-amt.pos{fill:var(--green)}
+.fl-foot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--hair);margin:8px 48px 0;padding:22px 0 36px}
+.fl-foot .eyebrow{letter-spacing:1.5px}
+.fl-foot .live{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.fl-foot .live .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:flpulse 2.4s ease-in-out infinite}
+@keyframes flpulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* draw + pop animations (fire when card reveals) */
+.fl-line{stroke-dasharray:1500;stroke-dashoffset:1500}
+.reveal.in .fl-line{animation:fldraw 1.7s cubic-bezier(.45,0,.2,1) .15s forwards}
+@keyframes fldraw{to{stroke-dashoffset:0}}
+.fl-event{opacity:0}
+.reveal.in .fl-event{animation:flpop .55s cubic-bezier(.34,1.4,.5,1) forwards}
+.reveal.in .fl-event:nth-of-type(1){animation-delay:.55s}
+.reveal.in .fl-event:nth-of-type(2){animation-delay:.7s}
+.reveal.in .fl-event:nth-of-type(3){animation-delay:.85s}
+.reveal.in .fl-event:nth-of-type(4){animation-delay:1.0s}
+.reveal.in .fl-event:nth-of-type(5){animation-delay:1.15s}
+.reveal.in .fl-event:nth-of-type(6){animation-delay:1.3s}
+.reveal.in .fl-event:nth-of-type(7){animation-delay:1.45s}
+@keyframes flpop{0%{opacity:0;transform:translateY(6px)}100%{opacity:1;transform:translateY(0)}}
+
+/* --- Stories --- */
+.story-card{display:grid;grid-template-columns:.85fr 1.15fr;gap:0}
+.story-copy{padding:48px 44px;display:flex;flex-direction:column}
+.story-copy .eyebrow{margin-bottom:18px}
+.story-copy h3{font-family:var(--serif);font-weight:400;letter-spacing:-1px;font-size:clamp(30px,3.2vw,44px);line-height:1.05;margin-bottom:22px}
+.story-copy p{font-size:15.5px;line-height:1.6;color:var(--muted);margin-bottom:auto}
+.story-copy p strong{color:var(--ink);font-weight:500}
+.story-copy .foot{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:36px}
+.story-panel-wrap{padding:24px 24px 24px 0;display:flex}
+.story-panel{background:#121212;border-radius:18px;padding:36px 38px;color:#f4f4f4;width:100%;display:flex;flex-direction:column}
+.story-panel .badge{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ai);display:flex;align-items:center;gap:9px;margin-bottom:6px}
+.story-panel .week{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:#76767c;margin-bottom:26px}
+.story-panel .narrative{font-family:var(--serif);font-weight:400;letter-spacing:-.3px;font-size:25px;line-height:1.4;color:#f4f4f4}
+.story-panel .narrative .amt{font-family:var(--mono);font-size:.78em;font-weight:500}
+.story-panel .narrative .neg{color:#ff5a5a}
+.story-panel .narrative .hi{color:var(--ai)}
+.story-ai{display:flex;align-items:center;gap:10px;margin-top:30px;padding-top:20px;border-top:1px solid #242426;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#76767c}
+.story-ai svg{width:14px;height:14px;color:var(--ai)}
+
+/* --- Manifesto divider --- */
+.manifesto{padding-top:152px;padding-bottom:152px;text-align:center}
+.manifesto p{font-family:var(--serif);font-weight:400;letter-spacing:-1px;font-size:clamp(32px,4.7vw,66px);line-height:1.2;max-width:1000px;margin:0 auto}
+.manifesto .step{display:block;color:var(--muted);transition:color .6s ease}
+.manifesto.in .step{color:var(--ink)}
+.manifesto .step .k{color:var(--ink)}
+.manifesto.in .step:nth-child(1){transition-delay:0s}
+.manifesto.in .step:nth-child(2){transition-delay:.16s}
+.manifesto.in .step:nth-child(3){transition-delay:.32s}
+.manifesto.in .step:nth-child(4){transition-delay:.48s}
+
+@media(max-width:900px){
+  .fl-head{grid-template-columns:1fr;gap:18px;padding:32px 26px 4px}
+  .fl-stage{padding:4px 10px}
+  .fl-foot{margin:8px 26px 0;flex-direction:column;align-items:flex-start;gap:14px}
+  .story-card{grid-template-columns:1fr}
+  .story-copy{padding:32px 26px 8px}
+  .story-panel-wrap{padding:0 26px 28px}
+  .story-panel{padding:28px 26px}
+}
+
+/* ============ WHY FINFLOW EXISTS ============ */
+.why{padding-top:124px;padding-bottom:124px}
+.why .eyebrow{margin-bottom:26px}
+.why-head{font-family:var(--serif);font-weight:400;letter-spacing:-1px;font-size:clamp(38px,4.9vw,70px);line-height:1.03;max-width:1000px;margin-bottom:48px}
+.why-body{max-width:660px;margin-bottom:78px}
+.why-body .knows{font-size:20px;line-height:1.55;color:var(--ink);margin-bottom:24px}
+.why-body .lead{font-size:17px;line-height:1.65;color:var(--muted)}
+.why-body .lead strong{color:var(--ink);font-weight:500}
+.why-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;border-top:1px solid var(--hair);padding-top:42px;align-items:start}
+.why-stat .n{font-family:var(--mono);font-weight:500;font-size:clamp(38px,4.4vw,56px);letter-spacing:-1.5px;color:var(--ink);display:block;line-height:1}
+.why-stat .l{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-top:12px}
+.why-stat.statement{font-family:var(--serif);font-weight:400;letter-spacing:-.5px;font-size:clamp(23px,2.5vw,33px);line-height:1.15;color:var(--ink)}
+
+/* ============ FEATURE CARD VISUALS ============ */
+.tones{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.tone{font-family:var(--mono);font-size:11px;letter-spacing:.5px;color:var(--ink);border:1px solid var(--hair);border-radius:100px;padding:7px 15px;transition:border-color .35s ease}
+.tone.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.codes{display:flex;flex-direction:column;gap:11px;margin-top:20px}
+.code-row{display:flex;align-items:center;gap:11px;font-family:var(--mono);font-size:13.5px}
+.code-row .raw{color:var(--muted)}
+.code-row .arr{color:var(--silver)}
+.code-row .real{color:var(--ink);font-weight:500}
+
+/* ============ FLOWSCORE ============ */
+.flowscore{padding-top:40px;padding-bottom:100px}
+.scores{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.score-card{padding:34px 32px 32px;display:flex;flex-direction:column;min-height:280px}
+.score-label{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.score-num{font-family:var(--mono);font-weight:500;font-size:74px;letter-spacing:-3px;color:var(--ink);line-height:1;margin-top:auto;display:flex;align-items:baseline;gap:7px}
+.score-num .of{font-size:18px;color:var(--silver);letter-spacing:0}
+.score-track{height:3px;background:var(--hair);border-radius:2px;margin-top:24px;overflow:hidden}
+.score-fill{height:100%;background:var(--ink);border-radius:2px;width:0}
+.reveal.in .score-fill{width:var(--w);transition:width 1.2s cubic-bezier(.4,0,.2,1) .2s}
+.score-sub{font-family:var(--sans);font-size:14.5px;color:var(--muted);margin-top:20px;line-height:1.5}
+.flowscore-note{text-align:center;margin-top:44px;font-size:15px;color:var(--muted)}
+.flowscore-note strong{color:var(--ink);font-weight:500}
+
+/* ============ FINANCIAL MEMORY ============ */
+.memory{padding-top:124px;padding-bottom:124px;text-align:center}
+.memory-inner{max-width:860px;margin:0 auto}
+.memory .eyebrow{margin-bottom:24px}
+.memory h2{font-family:var(--serif);font-weight:400;letter-spacing:-1px;font-size:clamp(36px,4.6vw,64px);line-height:1.04;margin-bottom:32px}
+.memory p{font-size:18px;line-height:1.65;color:var(--muted);max-width:660px;margin:0 auto}
+.memory p strong{color:var(--ink);font-weight:500}
+.memory .echo{font-family:var(--serif);font-weight:400;font-size:clamp(22px,2.7vw,32px);color:var(--ink);letter-spacing:-.5px;margin-top:40px;line-height:1.2}
+
+/* ============ FINALE ============ */
+.finale{padding-top:150px;padding-bottom:150px;text-align:center}
+.finale p{font-family:var(--serif);font-weight:400;letter-spacing:-1px;font-size:clamp(38px,5.3vw,78px);line-height:1.07;max-width:920px;margin:0 auto;color:var(--ink)}
+
+@media(max-width:900px){
+  .why-stats{grid-template-columns:1fr;gap:30px}
+  .scores{grid-template-columns:1fr}
+}
+
+/* ============ CALM STRIP ============ */
+.calm{padding-top:120px;padding-bottom:120px;text-align:center}
+.calm .quote{font-family:var(--serif);font-weight:400;letter-spacing:-1px;font-size:clamp(34px,4.4vw,60px);line-height:1.1;max-width:900px;margin:0 auto 32px}
+.calm .quote em{font-style:italic}
+.calm-meta{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+
+/* ============ DISCORD CTA ============ */
+.closer{padding-top:24px;padding-bottom:110px}
+.closer-card{max-width:760px;margin:0 auto;text-align:center;padding:64px 56px}
+.discord-glyph{width:54px;height:54px;margin:0 auto 28px;display:block;color:var(--discord)}
+.closer-card h2{font-family:var(--serif);font-weight:400;letter-spacing:-1px;font-size:clamp(34px,4vw,52px);line-height:1.06;margin-bottom:22px}
+.closer-card p{font-size:16.5px;color:var(--muted);line-height:1.6;max-width:520px;margin:0 auto 38px}
+.closer-card .btn{font-size:16px;padding:16px 32px}
+.closer-meta{margin-top:26px;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+
+/* ============ FOOTER ============ */
+.footer{border-top:1px solid var(--hair);padding-top:28px;padding-bottom:40px}
+.footer-row{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.footer-links{display:flex;gap:24px}
+.footer-links a{color:var(--muted);text-decoration:none;transition:color .3s ease}
+.footer-links a:hover{color:var(--ink)}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.4,0,.2,1), transform .8s cubic-bezier(.4,0,.2,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* staggered cascade for card groups */
+.three .icard:nth-child(2){transition-delay:.1s}
+.three .icard:nth-child(3){transition-delay:.2s}
+.two-two .fcard:nth-child(2){transition-delay:.09s}
+.two-two .fcard:nth-child(3){transition-delay:.18s}
+.two-two .fcard:nth-child(4){transition-delay:.27s}
+.scores .score-card:nth-child(2){transition-delay:.1s}
+.scores .score-card:nth-child(3){transition-delay:.2s}
+.why-stat:nth-child(2){transition-delay:.1s}
+.why-stat:nth-child(3){transition-delay:.2s}
+.hero .phone-wrap{transition-delay:.12s}
+
+/* gentle twinkle on AI sparkle accents */
+@keyframes twinkle{0%,100%{opacity:1}50%{opacity:.45}}
+.insight-eyebrow .spark,.story-panel .badge svg,.story-ai svg{animation:twinkle 3.4s ease-in-out infinite}
+.story-panel .badge svg{animation-delay:.6s}
+
+/* arrow nudge on CTAs */
+.arr{display:inline-block;transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.btn:hover .arr,.discord-link:hover .arr{transform:translateX(4px)}
+
+/* score number tick-up feel */
+.score-num .num{font-variant-numeric:tabular-nums}
+.why-stat .n{font-variant-numeric:tabular-nums}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;gap:56px;padding:40px 0 72px}
+  .phone-wrap{order:-1}
+  .three{grid-template-columns:1fr}
+  .two-two{grid-template-columns:1fr}
+  .shell{padding:0 24px}
+  .closer-card{padding:48px 28px}
+}
+</style>
+</head>
+<body>
+<div class="grid-bg" id="gridBg"></div>
+
+<!-- ============ NAV ============ -->
+<div class="shell">
+  <nav class="nav">
+    <a href="#" class="wordmark">Finflow</a>
+    <a href="https://discord.gg/vmnSw62bq" target="_blank" rel="noopener" class="discord-link">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#5865F2"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+      Join Discord <span class="arr">→</span>
+    </a>
+  </nav>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="shell">
+  <div class="hero">
+    <div class="hero-copy reveal">
+      <div class="eyebrow hero-eyebrow">FINANCIAL INTELLIGENCE · MEMORY · INDIA</div>
+      <h1>Your money,<br>finally understood.</h1>
+      <p class="hero-sub">FinFlow reads the financial signals already flowing through your phone — payments, places, and everyday moments — and tells you what actually happened. Not just what you spent.</p>
+      <div class="hero-ctas">
+        <a href="https://discord.gg/vmnSw62bq" target="_blank" rel="noopener" class="btn btn-primary">Join the Discord</a>
+        <a href="#how" class="btn btn-ghost">See how it works</a>
+      </div>
+    </div>
+
+    <!-- INSIGHT DECK -->
+    <div class="phone-wrap reveal" data-parallax="0.04">
+      <div class="feed-header">
+        <span class="feed-eyebrow"><span class="dot"></span> DAILY INTELLIGENCE</span>
+        <span class="feed-count">3 NEW · TODAY</span>
+      </div>
+      <div class="deck" id="feed">
+        <div class="insight">
+          <div class="insight-eyebrow"><svg class="spark" viewBox="0 0 24 24" fill="#FFCC00"><path d="M12 2l1.6 5.4L19 9l-5.4 1.6L12 16l-1.6-5.4L5 9l5.4-1.6z"/></svg> MORNING ROUTINE</div>
+          <div class="insight-body">You stopped for coffee near your office <span class="amt">3 mornings</span> this week.</div>
+          <div class="insight-meta"><span>NEAR OFFICE · 08:40 AM</span><span class="neg">₹540</span></div>
+        </div>
+        <div class="insight">
+          <div class="insight-eyebrow"><svg class="spark" viewBox="0 0 24 24" fill="#FFCC00"><path d="M12 2l1.6 5.4L19 9l-5.4 1.6L12 16l-1.6-5.4L5 9l5.4-1.6z"/></svg> FRIDAY NIGHT</div>
+          <div class="insight-body">Dinner with friends in Nungambakkam was your biggest social spend this week.</div>
+          <div class="insight-meta"><span>NUNGAMBAKKAM · 9:20 PM</span><span class="neg">₹1,840</span></div>
+        </div>
+        <div class="insight">
+          <div class="insight-eyebrow"><svg class="spark" viewBox="0 0 24 24" fill="#FFCC00"><path d="M12 2l1.6 5.4L19 9l-5.4 1.6L12 16l-1.6-5.4L5 9l5.4-1.6z"/></svg> LOCATION PATTERN</div>
+          <div class="insight-body">You visited Anna Nagar <span class="amt">5 times</span> this week — mostly after work.</div>
+          <div class="insight-meta"><span>ANNA NAGAR · EVENINGS</span><span class="neg">₹3,120</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY FINFLOW EXISTS ============ -->
+<section class="shell why reveal">
+  <div class="eyebrow">WHY FINFLOW EXISTS</div>
+  <h2 class="why-head">Your financial activity already tells a story. Most apps just never read it back to you.</h2>
+  <div class="why-body">
+    <p class="knows">Where you went. When you spent. Who you paid. What happened before. What came after. What quietly became a habit.</p>
+    <p class="lead">Traditional finance apps answer one question — <strong>what did I spend?</strong> FinFlow answers a better one: <strong>what happened?</strong></p>
+  </div>
+  <div class="why-stats">
+    <div class="why-stat"><span class="n" data-count="183">0</span><span class="l">transactions</span></div>
+    <div class="why-stat"><span class="n" data-count="12">0</span><span class="l">remembered</span></div>
+    <div class="why-stat statement">The pattern is what matters.</div>
+  </div>
+</section>
+
+<!-- ============ LANGUAGE REPLACES CHARTS ============ -->
+<section class="shell lang" id="how">
+  <div class="sec-head reveal">
+    <div class="eyebrow">THE FINFLOW DIFFERENCE</div>
+    <h2>We don't tell you what you spent.<br>We tell you what happened.</h2>
+  </div>
+  <div class="three">
+    <div class="card icard reveal">
+      <div class="eyebrow">MORNING PATTERN</div>
+      <h3>You stopped for coffee near your office <span class="mono">3 mornings</span> this week.</h3>
+      <div class="amt-line"><span class="mono">NEAR OFFICE · 08:40 AM · ₹540</span></div>
+    </div>
+    <div class="card icard reveal">
+      <div class="eyebrow">MICRO-SPEND BURST</div>
+      <h3>4 small spends in 12 minutes near the office canteen.</h3>
+      <div class="note">Small, fast, easy to miss — grouped into one moment so you actually see it.</div>
+    </div>
+    <div class="card icard reveal">
+      <div class="eyebrow">NEW PLACE</div>
+      <h3>First time spending in <span class="mono" style="font-size:22px">Nungambakkam</span>.</h3>
+      <div class="chip">＋ Remember this moment?</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ THE FINFLOW MODEL ============ -->
+<section class="shell model">
+  <div class="sec-head reveal">
+    <div class="eyebrow">THE FINFLOW MODEL</div>
+    <h2>Money doesn't happen in rows.<br>It happens in moments.</h2>
+  </div>
+
+  <!-- FLOWLINE -->
+  <div class="card model-card reveal">
+    <div class="fl-head">
+      <div>
+        <div class="eyebrow">FLOWLINE</div>
+        <h3>Your financial life, reconstructed.</h3>
+      </div>
+      <p>Most apps log a transaction. FlowLine reconstructs the moment around it — <strong>where you were</strong>, what came before, what came after. Coffee near the office was part of a morning. Dinner in Nungambakkam was part of a night out.</p>
+    </div>
+
+    <div class="fl-stage">
+      <svg class="flowline" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="A FlowLine grouped into life moments with location: Workday Morning, Friday Night, Weekend in Anna Nagar, Sunday Reset.">
+        <!-- the continuous line, flat through each chapter -->
+        <path class="fl-line" d="M105,152 H195 C290,152 320,144 415,144 H505 C600,144 630,156 725,156 H815 C910,156 940,146 1035,146 H1125"/>
+
+        <!-- cluster 1: SALARY DAY (above) -->
+        <g class="fl-event fl-cluster">
+          <text class="fl-chapter" x="150" y="70" text-anchor="middle">WORKDAY MORNING</text>
+          <text class="fl-amt neg" x="150" y="92" text-anchor="middle">−₹430</text>
+          <text class="fl-evlist" x="150" y="112" text-anchor="middle">Coffee near office · Metro · Breakfast</text>
+          <path class="fl-conn" d="M150,118 V139"/>
+          <rect class="fl-group" x="102" y="140" width="96" height="24" rx="12"/>
+          <circle class="fl-node" cx="120" cy="152" r="4"/>
+          <circle class="fl-node" cx="150" cy="152" r="4"/>
+          <circle class="fl-node" cx="180" cy="152" r="4"/>
+        </g>
+
+        <!-- cluster 2: WORK COMMUTE (below) -->
+        <g class="fl-event fl-cluster">
+          <rect class="fl-group" x="412" y="132" width="96" height="24" rx="12"/>
+          <circle class="fl-node" cx="430" cy="144" r="4"/>
+          <circle class="fl-node" cx="460" cy="144" r="4"/>
+          <circle class="fl-node" cx="490" cy="144" r="4"/>
+          <path class="fl-conn" d="M460,157 V178"/>
+          <text class="fl-chapter" x="460" y="194" text-anchor="middle">FRIDAY NIGHT</text>
+          <text class="fl-amt neg" x="460" y="216" text-anchor="middle">−₹2,680</text>
+          <text class="fl-evlist" x="460" y="236" text-anchor="middle">Dinner in Nungambakkam · Movie · Ride home</text>
+        </g>
+
+        <!-- cluster 3: FRIDAY NIGHT (above) -->
+        <g class="fl-event fl-cluster">
+          <text class="fl-chapter" x="770" y="74" text-anchor="middle">WEEKEND IN ANNA NAGAR</text>
+          <text class="fl-amt neg" x="770" y="96" text-anchor="middle">−₹3,120</text>
+          <text class="fl-evlist" x="770" y="116" text-anchor="middle">Brunch · Shopping · Coffee</text>
+          <path class="fl-conn" d="M770,122 V143"/>
+          <rect class="fl-group" x="722" y="144" width="96" height="24" rx="12"/>
+          <circle class="fl-node" cx="740" cy="156" r="4"/>
+          <circle class="fl-node" cx="770" cy="156" r="4"/>
+          <circle class="fl-node" cx="800" cy="156" r="4"/>
+        </g>
+
+        <!-- cluster 4: SUNDAY RESET (below) -->
+        <g class="fl-event fl-cluster">
+          <rect class="fl-group" x="1032" y="134" width="96" height="24" rx="12"/>
+          <circle class="fl-node" cx="1050" cy="146" r="4"/>
+          <circle class="fl-node" cx="1080" cy="146" r="4"/>
+          <circle class="fl-node" cx="1110" cy="146" r="4"/>
+          <path class="fl-conn" d="M1080,159 V180"/>
+          <text class="fl-chapter" x="1080" y="196" text-anchor="middle">SUNDAY RESET</text>
+          <text class="fl-amt neg" x="1080" y="218" text-anchor="middle">−₹3,910</text>
+          <text class="fl-evlist" x="1080" y="238" text-anchor="middle">Groceries · Gym · Fuel stop</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="fl-foot">
+      <div class="eyebrow">MOMENTS · CONTEXT · LOCATION</div>
+      <div class="live"><span class="dot"></span> FOUR MOMENTS · ONE WEEK</div>
+    </div>
+  </div>
+
+  <!-- STORIES -->
+  <div class="card model-card reveal">
+    <div class="story-card">
+      <div class="story-copy">
+        <div class="eyebrow">STORIES</div>
+        <h3>The weeks worth remembering.</h3>
+        <p>Every week and month, FinFlow turns patterns into narratives. <strong>Not reports. Not dashboards. Stories.</strong> The moments, habits, and changes that actually mattered.</p>
+        <div class="foot">AUTO-GENERATED · PERSONALIZED · PRIVATE</div>
+      </div>
+      <div class="story-panel-wrap">
+        <div class="story-panel">
+          <div class="badge">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#FFCC00"><path d="M12 2l1.6 5.4L19 9l-5.4 1.6L12 16l-1.6-5.4L5 9l5.4-1.6z"/></svg>
+            WEEKLY STORY
+          </div>
+          <div class="week">WEEK 22 · CHENNAI</div>
+          <div class="narrative">
+            This week looked different. You visited <span class="hi">Anna Nagar five times</span>. Three of those visits included food or dining. Most spending happened after work hours. Compared to last month, <span class="hi">evenings</span> became a larger share of your discretionary spending. This may have been your most social week this year.
+          </div>
+          <div class="story-ai">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.6 5.4L19 9l-5.4 1.6L12 16l-1.6-5.4L5 9l5.4-1.6z"/></svg>
+            AI-GENERATED FROM YOUR ACTIVITY
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINANCIAL MEMORY ============ -->
+<section class="shell memory">
+  <div class="memory-inner reveal">
+    <div class="eyebrow">FINANCIAL MEMORY</div>
+    <h2>A memory for your financial life.</h2>
+    <p>Most people remember purchases. Very few remember context. FinFlow remembers <strong>where you were</strong>, what happened before, what happened after, and why the moment mattered.</p>
+    <p class="echo">Weeks later, a transaction becomes a memory.</p>
+  </div>
+</section>
+
+<!-- ============ PRODUCT PHILOSOPHY ============ -->
+<section class="shell manifesto reveal">
+  <p>
+    <span class="step">Transactions become <span class="k">FlowLines</span>.</span>
+    <span class="step">FlowLines become <span class="k">Stories</span>.</span>
+    <span class="step">Stories become <span class="k">understanding</span>.</span>
+    <span class="step">Understanding becomes <span class="k">better decisions</span>.</span>
+  </p>
+</section>
+
+<!-- ============ FEATURE GRID ============ -->
+<section class="shell features">
+  <div class="sec-head reveal">
+    <div class="eyebrow">WHAT'S INSIDE</div>
+    <h2>Built to think the way you do.</h2>
+  </div>
+  <div class="two-two">
+    <div class="card fcard reveal">
+      <svg class="ficon" viewBox="0 0 24 24"><path d="M2 12h4l2.5-6 4 13 2.5-7H22"/></svg>
+      <h3>See habits before they become problems.</h3>
+      <p>You're not overspending. You're ordering food after midnight four times more often than usual. <span class="mono" style="font-size:13.5px">FinFlow notices the difference.</span></p>
+    </div>
+    <div class="card fcard reveal">
+      <svg class="ficon" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3v-5a8 8 0 1 1 18-6z"/></svg>
+      <h3>Notifications with personality.</h3>
+      <p>Choose how FinFlow speaks to you. The same insight can feel very different depending on who delivers it.</p>
+      <div class="tones">
+        <span class="tone">Coach</span>
+        <span class="tone on">Friend</span>
+        <span class="tone">Parent</span>
+        <span class="tone">Direct</span>
+      </div>
+    </div>
+    <div class="card fcard reveal">
+      <svg class="ficon" viewBox="0 0 24 24"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0l-7.2-7.2V4h9.4l7.8 7.4a2 2 0 0 1 0 2z"/><circle cx="7.5" cy="7.5" r="1.1"/></svg>
+      <h3>Your alerts speak in codes.</h3>
+      <div class="codes">
+        <div class="code-row"><span class="raw">SWGYPVTBLR</span><span class="arr">→</span><span class="real">Swiggy</span></div>
+        <div class="code-row"><span class="raw">AMZNMKT</span><span class="arr">→</span><span class="real">Amazon</span></div>
+        <div class="code-row"><span class="raw">UPI-RAHULK</span><span class="arr">→</span><span class="real">Rahul</span></div>
+      </div>
+      <p>FinFlow remembers who people and merchants actually are.</p>
+    </div>
+    <div class="card fcard reveal">
+      <svg class="ficon" viewBox="0 0 24 24"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>
+      <h3>Remember where life happened.</h3>
+      <p>A payment is useful. A payment plus place, time, and context becomes a memory. FinFlow helps you reconnect transactions to real moments.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FLOWSCORE ============ -->
+<section class="shell flowscore">
+  <div class="sec-head reveal">
+    <div class="eyebrow">FINANCIAL PROFILE</div>
+    <h2>A financial profile that grows with you.</h2>
+  </div>
+  <div class="scores">
+    <div class="card score-card reveal" style="--w:82%">
+      <div class="score-label">BEHAVIOR</div>
+      <div class="score-num"><span class="num" data-count="82">0</span><span class="of">/100</span></div>
+      <div class="score-track"><div class="score-fill"></div></div>
+      <div class="score-sub">Consistent spending patterns.</div>
+    </div>
+    <div class="card score-card reveal" style="--w:76%">
+      <div class="score-label">STABILITY</div>
+      <div class="score-num"><span class="num" data-count="76">0</span><span class="of">/100</span></div>
+      <div class="score-track"><div class="score-fill"></div></div>
+      <div class="score-sub">Income and obligations in balance.</div>
+    </div>
+    <div class="card score-card reveal" style="--w:88%">
+      <div class="score-label">FINANCIAL</div>
+      <div class="score-num"><span class="num" data-count="88">0</span><span class="of">/100</span></div>
+      <div class="score-track"><div class="score-fill"></div></div>
+      <div class="score-sub">Healthy saving behavior.</div>
+    </div>
+  </div>
+  <div class="flowscore-note reveal">Not a credit score. <strong>A picture of your financial habits.</strong></div>
+</section>
+
+<!-- ============ CALM STRIP ============ -->
+<section class="shell calm">
+  <div class="quote reveal">Understand your money.<br><em>Then get on with your life.</em></div>
+  <div class="calm-meta reveal">BUILT IN INDIA · ON-DEVICE · PRIVATE BY DESIGN</div>
+</section>
+
+<!-- ============ DISCORD CTA ============ -->
+<section class="shell closer" id="discord">
+  <div class="card closer-card reveal">
+    <svg class="discord-glyph" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+    <h2>Become one of the first people FinFlow learns from.</h2>
+    <p>We're looking for thoughtful people who are curious about their financial behavior. Not beta testers. Collaborators. The goal is to build FinFlow alongside a small founding cohort before opening it to everyone.</p>
+    <a href="https://discord.gg/vmnSw62bq" target="_blank" rel="noopener" class="btn btn-primary">Join the FinFlow Discord <span class="arr">→</span></a>
+    <div class="closer-meta">FOUNDING COHORT · ALPHA ACCESS · &lt;300 MEMBERS</div>
+  </div>
+</section>
+
+<!-- ============ FINALE ============ -->
+<section class="shell finale reveal">
+  <p>Money leaves clues.<br>FinFlow helps you read them.</p>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="shell footer">
+  <div class="footer-row">
+    <span>© FINFLOW 2026</span>
+    <div class="footer-links">
+      <a href="#">PRIVACY</a>
+      <a href="#">TERMS</a>
+      <a href="#">CONTACT</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---- staggered reveal of insight cards ---- */
+(function(){
+  const cards = Array.from(document.querySelectorAll('#feed .insight'));
+  cards.forEach((c,i)=>{ setTimeout(()=>c.classList.add('in'), 250 + i*160); });
+})();
+
+/* ---- reveal on scroll ---- */
+(function(){
+  const reveals = Array.from(document.querySelectorAll('.reveal'));
+  const showInView = ()=>{
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    reveals.forEach(el=>{
+      if(el.classList.contains('in')) return;
+      const r = el.getBoundingClientRect();
+      if(r.top < vh - 40) el.classList.add('in');
+    });
+  };
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+    }, {threshold:.1, rootMargin:'0px 0px -40px 0px'});
+    reveals.forEach(el=>io.observe(el));
+  }
+  // guaranteed reveal for anything already on screen (covers preview iframes
+  // where IO may not fire on initial paint)
+  showInView();
+  window.addEventListener('load', showInView);
+  window.addEventListener('scroll', showInView, {passive:true});
+})();
+
+/* ---- subtle parallax of cards over fixed grid ---- */
+(function(){
+  const items = Array.from(document.querySelectorAll('[data-parallax]'));
+  let ticking=false;
+  window.addEventListener('scroll', ()=>{
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(()=>{
+      const y = window.scrollY;
+      items.forEach(el=>{
+        const amt = parseFloat(el.dataset.parallax)||0;
+        el.style.transform = 'translateY('+(-y*amt)+'px)';
+      });
+      ticking=false;
+    });
+  }, {passive:true});
+})();
+/* ---- tri-color + grid bands (yellow / green / pink across the page) ---- */
+(function(){
+  const grid = document.getElementById('gridBg');
+  const G = 130, H = G/2; // grid module + half (for centering + on intersections)
+  const COLORS = ['#FFCC00','#00C853','#FF4F9A']; // top → middle → bottom
+  const plus = c => "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='130'%3E%3Cpath d='M65 58 V72 M58 65 H72' stroke='"+encodeURIComponent(c)+"' stroke-width='1.4' opacity='0.3'/%3E%3C/svg%3E\")";
+  // snap a boundary to halfway between + rows so no + is ever split across colors
+  const snap = v => Math.round((v-H)/G)*G + H;
+  let bands = [];
+  function ensure(){
+    if(bands.length===3) return;
+    grid.innerHTML='';
+    for(let i=0;i<3;i++){const d=document.createElement('div');d.className='grid-band';d.style.backgroundImage=plus(COLORS[i]);grid.appendChild(d);}
+    bands = Array.from(grid.querySelectorAll('.grid-band'));
+  }
+  function build(){
+    ensure();
+    grid.style.height='0px';
+    const total = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+    grid.style.height = total+'px';
+    let b1 = Math.max(150, snap(total/3));
+    let b2 = Math.max(b1+100, snap(total*2/3));
+    const bounds = [[0,b1],[b1,b2],[b2,total]];
+    bands.forEach((d,i)=>{
+      const [t,b] = bounds[i];
+      d.style.top = t+'px';
+      d.style.height = (b-t)+'px';
+      // place the + exactly on the line intersections (x & y multiples of G)
+      d.style.backgroundPositionX = H+'px';
+      d.style.backgroundPositionY = (((-H-t)%G)+G)%G + 'px';
+    });
+  }
+  build();
+  window.addEventListener('load', build);
+  setTimeout(build, 600);
+  let rt; window.addEventListener('resize', ()=>{clearTimeout(rt);rt=setTimeout(build,150);}, {passive:true});
+})();
+/* ---- count-up numbers when scrolled into view ---- */
+(function(){
+  const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const els = Array.from(document.querySelectorAll('[data-count]'));
+  function animate(el){
+    if(el._counted) return; el._counted = true;
+    const target = parseInt(el.dataset.count,10);
+    if(reduce){ el.textContent = target; return; }
+    const dur = 1100, t0 = performance.now();
+    (function tick(now){
+      const p = Math.min(1, (now-t0)/dur);
+      const eased = 1 - Math.pow(1-p, 3);
+      el.textContent = Math.round(target*eased);
+      if(p<1) requestAnimationFrame(tick); else el.textContent = target;
+    })(performance.now());
+  }
+  function check(){
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    els.forEach(el=>{ if(el._counted) return; const r = el.getBoundingClientRect(); if(r.top < vh-30 && r.bottom > 0) animate(el); });
+  }
+  check();
+  window.addEventListener('load', check);
+  window.addEventListener('scroll', check, {passive:true});
+  window.addEventListener('resize', check, {passive:true});
+})();
+</script>
+</body>
+</html>
