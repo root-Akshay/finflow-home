@@ -385,6 +385,57 @@ section{position:relative}
   .shell{padding:0 24px}
   .closer-card{padding:48px 28px}
 }
+
+/* ============ PHONE ============ */
+@media(max-width:600px){
+  .shell{padding:0 18px}
+
+  /* nav */
+  .nav{height:64px}
+  .wordmark{font-size:25px}
+  .discord-link{font-size:13px;padding:9px 14px;gap:8px}
+
+  /* hero */
+  .hero{gap:40px;padding:24px 0 56px}
+  .hero h1{font-size:clamp(38px,11vw,52px);line-height:1.02;margin-bottom:22px}
+  .hero-eyebrow{margin-bottom:20px}
+  .hero-sub{font-size:16px;max-width:none;margin-bottom:28px}
+  .hero-ctas{gap:10px}
+  .hero-ctas .btn{flex:1 1 auto;justify-content:center}
+
+  /* trim the oversized vertical rhythm */
+  .lang,.features{padding-top:24px;padding-bottom:64px}
+  .model{padding-top:24px;padding-bottom:24px}
+  .flowscore{padding-top:24px;padding-bottom:64px}
+  .why{padding-top:72px;padding-bottom:72px}
+  .memory{padding-top:72px;padding-bottom:72px}
+  .calm{padding-top:72px;padding-bottom:72px}
+  .finale{padding-top:88px;padding-bottom:88px}
+  .manifesto{padding-top:80px;padding-bottom:80px}
+  .closer{padding-bottom:72px}
+
+  /* section heads + cards */
+  .sec-head{margin-bottom:32px}
+  .icard{min-height:0;padding:26px 22px}
+  .fcard{padding:30px 24px}
+  .fcard h3{font-size:26px}
+
+  /* flowscore */
+  .score-card{min-height:0;padding:28px 26px}
+  .score-num{font-size:60px;letter-spacing:-2px}
+
+  /* why stats */
+  .why-body{margin-bottom:52px}
+  .why-stats{padding-top:32px}
+
+  /* closer */
+  .closer-card{padding:44px 24px}
+  .closer-card .btn{width:100%;justify-content:center}
+
+  /* footer wrap */
+  .footer-row{flex-direction:column;gap:16px;text-align:center}
+  .footer-links{gap:18px;flex-wrap:wrap;justify-content:center}
+}
 </style>
 </head>
 <body>
