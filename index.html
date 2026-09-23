@@ -261,15 +261,6 @@ section{position:relative}
 .story-ai svg{width:14px;height:14px;color:var(--ai)}
 
 /* --- Manifesto divider --- */
-.manifesto{padding-top:152px;padding-bottom:152px;text-align:center}
-.manifesto p{font-family:var(--serif);font-weight:400;letter-spacing:-0.2px;font-size:clamp(32px,4.7vw,66px);line-height:1.2;max-width:1000px;margin:0 auto}
-.manifesto .step{display:block;color:var(--muted);transition:color .6s ease}
-.manifesto.in .step{color:var(--ink)}
-.manifesto .step .k{color:var(--ink)}
-.manifesto.in .step:nth-child(1){transition-delay:0s}
-.manifesto.in .step:nth-child(2){transition-delay:.16s}
-.manifesto.in .step:nth-child(3){transition-delay:.32s}
-.manifesto.in .step:nth-child(4){transition-delay:.48s}
 
 @media(max-width:900px){
   .fl-head{grid-template-columns:1fr;gap:18px;padding:32px 26px 4px}
@@ -282,14 +273,8 @@ section{position:relative}
 }
 
 /* ============ WHY FINFLOW EXISTS ============ */
-.why{padding-top:124px;padding-bottom:124px}
-.why .eyebrow{margin-bottom:26px}
-.why-head{font-family:var(--serif);font-weight:400;letter-spacing:0;font-size:clamp(38px,4.9vw,70px);line-height:1.03;max-width:1000px;margin-bottom:48px}
-.why-body{max-width:660px;margin-bottom:78px}
-.why-body .knows{font-size:20px;line-height:1.55;color:var(--ink);margin-bottom:24px}
-.why-body .lead{font-size:17px;line-height:1.65;color:var(--muted)}
-.why-body .lead strong{color:var(--ink);font-weight:500}
-.why-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;border-top:1px solid var(--hair);padding-top:42px;align-items:start}
+.sec-head .knows{font-size:19px;line-height:1.55;color:var(--muted);margin-top:22px}
+.why-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;border-top:1px solid var(--hair);padding-top:42px;margin-top:56px;align-items:start}
 .why-stat .n{font-family:var(--mono);font-weight:500;font-size:clamp(38px,4.4vw,56px);letter-spacing:-1px;color:var(--ink);display:block;line-height:1}
 .why-stat .l{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-top:12px}
 .why-stat.statement{font-family:var(--serif);font-weight:400;letter-spacing:-0.1px;font-size:clamp(23px,2.5vw,33px);line-height:1.15;color:var(--ink)}
@@ -318,14 +303,6 @@ section{position:relative}
 .flowscore-note{text-align:center;margin-top:44px;font-size:15px;color:var(--muted)}
 .flowscore-note strong{color:var(--ink);font-weight:500}
 
-/* ============ FINANCIAL MEMORY ============ */
-.memory{padding-top:124px;padding-bottom:124px;text-align:center}
-.memory-inner{max-width:860px;margin:0 auto}
-.memory .eyebrow{margin-bottom:24px}
-.memory h2{font-family:var(--serif);font-weight:400;letter-spacing:-0.2px;font-size:clamp(36px,4.6vw,64px);line-height:1.04;margin-bottom:32px}
-.memory p{font-size:18px;line-height:1.65;color:var(--muted);max-width:660px;margin:0 auto}
-.memory p strong{color:var(--ink);font-weight:500}
-.memory .echo{font-family:var(--serif);font-weight:400;font-size:clamp(22px,2.7vw,32px);color:var(--ink);letter-spacing:-0.1px;margin-top:40px;line-height:1.2}
 
 /* ============ FINALE ============ */
 .finale{padding-top:150px;padding-bottom:150px;text-align:center}
@@ -362,6 +339,41 @@ section{position:relative}
 @media(max-width:600px){
   .mark-hero{width:48px;height:48px;margin-bottom:18px}
   .dl-card .mark{width:64px;height:64px}
+}
+
+/* ============ PILLARS ============ */
+.pillars{padding-top:40px;padding-bottom:96px}
+.pillar-row{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;margin-top:44px}
+.pillar{
+  background:rgba(255,255,255,0.82);
+  border:1px solid var(--hair);border-radius:var(--r);
+  padding:26px 22px 28px;
+  transition:border-color .35s ease;
+}
+.pillar:hover{border-color:var(--ink)}
+.pillar img{width:40px;height:40px;object-fit:contain;display:block;margin-bottom:20px}
+.pillar h3{font-size:17px;font-weight:500;margin-bottom:9px;letter-spacing:-0.1px}
+.pillar p{font-size:13.5px;line-height:1.55;color:var(--muted)}
+.pillar .tag{
+  display:block;margin-top:16px;font-family:var(--mono);font-size:9px;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);
+}
+.pillar.key{border-color:var(--ink)}
+.pillar.key .tag{color:var(--ink)}
+.pillars-foot{
+  margin-top:44px;padding-top:30px;border-top:1px solid var(--hair);
+  display:flex;gap:40px;flex-wrap:wrap;align-items:baseline;
+}
+.pillars-foot p{font-size:15.5px;line-height:1.6;color:var(--muted);max-width:560px}
+.pillars-foot strong{color:var(--ink);font-weight:500}
+@media(max-width:900px){
+  .pillar-row{grid-template-columns:repeat(2,1fr)}
+  .pillars{padding-bottom:72px}
+}
+@media(max-width:600px){
+  .pillar-row{grid-template-columns:1fr;gap:14px}
+  .pillar{padding:22px 20px 24px}
+  .pillar img{width:34px;height:34px;margin-bottom:16px}
 }
 
 /* ============ DOWNLOAD ============ */
@@ -460,11 +472,8 @@ section{position:relative}
   .lang,.features{padding-top:24px;padding-bottom:64px}
   .model{padding-top:24px;padding-bottom:24px}
   .flowscore{padding-top:24px;padding-bottom:64px}
-  .why{padding-top:72px;padding-bottom:72px}
-  .memory{padding-top:72px;padding-bottom:72px}
   .calm{padding-top:72px;padding-bottom:72px}
   .finale{padding-top:88px;padding-bottom:88px}
-  .manifesto{padding-top:80px;padding-bottom:80px}
   .closer{padding-bottom:72px}
 
   /* section heads + cards */
@@ -478,7 +487,6 @@ section{position:relative}
   .score-num{font-size:60px;letter-spacing:-2px}
 
   /* why stats */
-  .why-body{margin-bottom:52px}
   .why-stats{padding-top:32px}
 
   /* closer */
@@ -555,25 +563,11 @@ section{position:relative}
 </section>
 
 <!-- ============ WHY FINFLOW EXISTS ============ -->
-<section class="shell why reveal">
-  <div class="eyebrow">WHY FINFLOW EXISTS</div>
-  <h2 class="why-head">Your financial activity already tells a story. Most apps just never read it back to you.</h2>
-  <div class="why-body">
-    <p class="knows">Where you went. When you spent. Who you paid. What happened before. What came after. What quietly became a habit.</p>
-    <p class="lead">Traditional finance apps answer one question: <strong>what did I spend?</strong> FinFlow answers a better one: <strong>what happened?</strong></p>
-  </div>
-  <div class="why-stats">
-    <div class="why-stat"><span class="n" data-count="183">0</span><span class="l">transactions</span></div>
-    <div class="why-stat"><span class="n" data-count="12">0</span><span class="l">remembered</span></div>
-    <div class="why-stat statement">The pattern is what matters.</div>
-  </div>
-</section>
-
-<!-- ============ LANGUAGE REPLACES CHARTS ============ -->
 <section class="shell lang" id="how">
   <div class="sec-head reveal">
-    <div class="eyebrow">THE FINFLOW DIFFERENCE</div>
-    <h2>We don't tell you what you spent.<br>We tell you what happened.</h2>
+    <div class="eyebrow">WHY FINFLOW EXISTS</div>
+    <h2>Your financial activity already tells a story.<br>Most apps just never read it back to you.</h2>
+    <p class="knows">Where you went. When you spent. Who you paid. What happened before. What came after. What quietly became a habit.</p>
   </div>
   <div class="three">
     <div class="card icard reveal">
@@ -591,6 +585,11 @@ section{position:relative}
       <h3>First time spending in <span class="mono" style="font-size:22px">Nungambakkam</span>.</h3>
       <div class="chip">＋ Remember this moment?</div>
     </div>
+  </div>
+<div class="why-stats reveal">
+    <div class="why-stat"><span class="n" data-count="183">0</span><span class="l">transactions</span></div>
+    <div class="why-stat"><span class="n" data-count="12">0</span><span class="l">remembered</span></div>
+    <div class="why-stat statement">The pattern is what matters.</div>
   </div>
 </section>
 
@@ -701,24 +700,50 @@ section{position:relative}
   </div>
 </section>
 
-<!-- ============ FINANCIAL MEMORY ============ -->
-<section class="shell memory">
-  <div class="memory-inner reveal">
-    <div class="eyebrow">FINANCIAL MEMORY</div>
-    <h2>A memory for your financial life.</h2>
-    <p>Most people remember purchases. Very few remember context. FinFlow remembers <strong>where you were</strong>, what happened before, what happened after, and why the moment mattered.</p>
-    <p class="echo">Weeks later, a transaction becomes a memory.</p>
+<!-- ============ PILLARS ============ -->
+<section class="shell pillars" id="pillars">
+  <div class="sec-head reveal">
+    <div class="eyebrow">THE FIVE PILLARS</div>
+    <h2>You're not overspending.<br>You're paying for convenience.</h2>
+    <p class="knows">Every rupee lands on one of five pillars, ordered by how much say you actually had in it. Most apps file a ₹400 dinner and a ₹400 delivery order under the same heading: Food. They aren't the same spend, and only one of them is worth cutting.</p>
   </div>
-</section>
 
-<!-- ============ PRODUCT PHILOSOPHY ============ -->
-<section class="shell manifesto reveal">
-  <p>
-    <span class="step">Transactions become <span class="k">FlowLines</span>.</span>
-    <span class="step">FlowLines become <span class="k">Stories</span>.</span>
-    <span class="step">Stories become <span class="k">understanding</span>.</span>
-    <span class="step">Understanding becomes <span class="k">better decisions</span>.</span>
-  </p>
+  <div class="pillar-row">
+    <div class="pillar reveal">
+      <img src="pillars/fixed_costs.png" alt="" width="40" height="40">
+      <h3>Fixed</h3>
+      <p>Rent, EMIs, insurance, bills. Decided before the month even starts.</p>
+      <span class="tag">LOCKED</span>
+    </div>
+    <div class="pillar reveal">
+      <img src="pillars/essentials.png" alt="" width="40" height="40">
+      <h3>Essentials</h3>
+      <p>Groceries, fuel, transit, pharmacy. The cost of being alive this week.</p>
+      <span class="tag">NECESSARY</span>
+    </div>
+    <div class="pillar reveal">
+      <img src="pillars/fun.png" alt="" width="40" height="40">
+      <h3>Fun</h3>
+      <p>Dinner out, a gig, a trip. You chose it, and it was worth choosing.</p>
+      <span class="tag">JOYFUL</span>
+    </div>
+    <div class="pillar key reveal">
+      <img src="pillars/shortcuts.png" alt="" width="40" height="40">
+      <h3>Shortcuts</h3>
+      <p>Delivery fees, surge cabs, the fourth chai. Spending you'd never miss.</p>
+      <span class="tag">LEAKY</span>
+    </div>
+    <div class="pillar reveal">
+      <img src="pillars/future.png" alt="" width="40" height="40">
+      <h3>Future</h3>
+      <p>Investments and savings. The only one that grows while you're not looking.</p>
+      <span class="tag">FORWARD</span>
+    </div>
+  </div>
+
+  <div class="pillars-foot reveal">
+    <p>Nothing to set up. No budgets, no envelopes, no monthly review. Correct a merchant once and its pillar follows, because <strong>the pillar is derived, never chosen</strong>. The orb on the download button is these five, mixing.</p>
+  </div>
 </section>
 
 <!-- ============ FEATURE GRID ============ -->
