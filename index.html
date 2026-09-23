@@ -34,6 +34,7 @@ body{
   font-weight:400;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
+  overflow-x:clip;
   position:relative;
 }
 
@@ -100,6 +101,14 @@ section{position:relative}
 .btn-ghost:hover{border-color:var(--ink)}
 
 /* ============ NAV ============ */
+.nav-shell{
+  position:sticky;top:0;z-index:20;
+  background:rgba(247,247,247,.82);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid transparent;
+  transition:border-color .3s ease;
+}
+.nav-shell.stuck{border-bottom-color:var(--hair)}
 .nav{
   position:relative;z-index:3;
   display:flex;align-items:center;justify-content:space-between;
@@ -329,6 +338,31 @@ section{position:relative}
 .calm-meta{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
 
 /* ============ DISCORD CTA ============ */
+/* pillar orb — the Concentration shader, ported to WebGL2 (shaders/pillar_orb.frag) */
+.orb{
+  width:20px;height:20px;border-radius:50%;
+  display:block;flex-shrink:0;
+  /* fallback when WebGL2 is unavailable: a still of the palette */
+  background:radial-gradient(circle at 34% 30%, #FCFBF7 0%, #E9C77A 38%, #E14444 62%, #8B5CF6 82%, #10B981 100%);
+}
+
+/* ============ DOWNLOAD ============ */
+.download{padding-top:24px;padding-bottom:40px}
+.dl-card{max-width:760px;margin:0 auto;text-align:center;padding:64px 56px}
+.dl-card h2{font-family:var(--serif);font-weight:400;letter-spacing:-0.2px;font-size:clamp(34px,4vw,52px);line-height:1.06;margin-bottom:22px}
+.dl-card > p{font-size:16.5px;color:var(--muted);line-height:1.6;max-width:520px;margin:0 auto 38px}
+.dl-card .btn{font-size:16px;padding:16px 32px}
+.dl-size{font-family:var(--mono);font-size:11px;letter-spacing:.5px;opacity:.65}
+.dl-alt{display:block;margin-top:18px;font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .3s ease}
+.dl-alt:hover{color:var(--ink)}
+.dl-steps{margin:44px auto 0;max-width:520px;text-align:left;display:flex;flex-direction:column;gap:18px}
+.dl-step{display:flex;gap:16px;align-items:flex-start}
+.dl-num{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--muted);padding-top:3px;flex-shrink:0}
+.dl-step p{font-size:14.5px;line-height:1.55;color:var(--ink)}
+.dl-step p em{font-style:normal;color:var(--muted)}
+.dl-meta{margin-top:38px;padding-top:26px;border-top:1px solid var(--hair);font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.dl-privacy{margin-top:12px;font-size:13px;color:var(--muted);line-height:1.5}
+.dl-privacy a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
 .closer{padding-top:24px;padding-bottom:110px}
 .closer-card{max-width:760px;margin:0 auto;text-align:center;padding:64px 56px}
 .discord-glyph{width:54px;height:54px;margin:0 auto 28px;display:block;color:var(--discord)}
@@ -383,6 +417,7 @@ section{position:relative}
   .three{grid-template-columns:1fr}
   .two-two{grid-template-columns:1fr}
   .shell{padding:0 24px}
+  .dl-card{padding:48px 28px}
   .closer-card{padding:48px 28px}
 }
 
@@ -429,6 +464,8 @@ section{position:relative}
   .why-stats{padding-top:32px}
 
   /* closer */
+  .dl-card{padding:44px 24px}
+  .dl-card .btn{width:100%;justify-content:center}
   .closer-card{padding:44px 24px}
   .closer-card .btn{width:100%;justify-content:center}
 
@@ -442,13 +479,16 @@ section{position:relative}
 <div class="grid-bg" id="gridBg"></div>
 
 <!-- ============ NAV ============ -->
-<div class="shell">
+<div class="shell nav-shell">
   <nav class="nav">
     <a href="#" class="wordmark">Finflow</a>
+    <div style="display:flex;align-items:center;gap:14px">
+    <a href="#download" class="btn btn-ghost" style="padding:10px 18px;font-size:14px">Download</a>
     <a href="https://discord.gg/vmnSw62bq" target="_blank" rel="noopener" class="discord-link">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="#5865F2"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
       Join Discord <span class="arr">→</span>
     </a>
+    </div>
   </nav>
 </div>
 
@@ -460,7 +500,8 @@ section{position:relative}
       <h1>Your money,<br>finally understood.</h1>
       <p class="hero-sub">FinFlow reads the financial signals already flowing through your phone — payments, places, and everyday moments — and tells you what actually happened. Not just what you spent.</p>
       <div class="hero-ctas">
-        <a href="https://discord.gg/vmnSw62bq" target="_blank" rel="noopener" class="btn btn-primary">Join the Discord</a>
+        <a href="#download" class="btn btn-primary"><canvas class="orb" aria-hidden="true"></canvas>Download for Android <span class="dl-size">&middot; 29 MB</span></a>
+        <a href="https://discord.gg/vmnSw62bq" target="_blank" rel="noopener" class="btn btn-ghost">Join the Discord</a>
         <a href="#how" class="btn btn-ghost">See how it works</a>
       </div>
     </div>
@@ -735,6 +776,40 @@ section{position:relative}
   <div class="calm-meta reveal">BUILT IN INDIA · ON-DEVICE · PRIVATE BY DESIGN</div>
 </section>
 
+<!-- ============ DOWNLOAD ============ -->
+<section class="shell download" id="download">
+  <div class="card dl-card reveal">
+    <div class="eyebrow" style="margin-bottom:24px">ANDROID · DIRECT DOWNLOAD · v1.1.0</div>
+    <h2>Put it on your phone.</h2>
+    <p>FinFlow isn't on the Play Store yet. Download it directly — it reads your bank alerts on-device and starts building your history from the first message.</p>
+
+    <a href="https://github.com/root-Akshay/finflow-home/releases/latest/download/finflow-arm64.apk" class="btn btn-primary"><canvas class="orb" aria-hidden="true"></canvas>Download for Android <span class="dl-size">· 29 MB</span></a>
+    <a href="https://github.com/root-Akshay/finflow-home/releases/latest/download/finflow-universal.apk" class="dl-alt">Older or unusual device? Get the universal build · 75 MB</a>
+
+    <div class="dl-steps">
+      <div class="dl-step">
+        <span class="dl-num">01</span>
+        <p>Tap the button above. Your browser will ask whether to keep the file — it's an app, so it warns. <em>Keep it.</em></p>
+      </div>
+      <div class="dl-step">
+        <span class="dl-num">02</span>
+        <p>Open the downloaded file. Android will say it can't install apps from this source, and offer a settings toggle. <em>Turn it on, then come back.</em></p>
+      </div>
+      <div class="dl-step">
+        <span class="dl-num">03</span>
+        <p>Play Protect will warn you about an unrecognised developer. That's every app not distributed through the Play Store. <em>Choose "Install anyway".</em></p>
+      </div>
+      <div class="dl-step">
+        <span class="dl-num">04</span>
+        <p>Open FinFlow and grant notification access when asked. That's the permission that lets it read bank alerts — without it, nothing arrives.</p>
+      </div>
+    </div>
+
+    <div class="dl-meta">ANDROID 7.0+ · 64-BIT ARM · v1.1.0</div>
+    <p class="dl-privacy">Your transactions stay in a database on your phone. Sign-in and the optional social features use Firebase — <a href="privacy.html">read the privacy policy</a>.</p>
+  </div>
+</section>
+
 <!-- ============ DISCORD CTA ============ -->
 <section class="shell closer" id="discord">
   <div class="card closer-card reveal">
@@ -756,7 +831,7 @@ section{position:relative}
   <div class="footer-row">
     <span>© FINFLOW 2026</span>
     <div class="footer-links">
-      <a href="#">PRIVACY</a>
+      <a href="privacy.html">PRIVACY</a>
       <a href="#">TERMS</a>
       <a href="#">CONTACT</a>
     </div>
@@ -871,6 +946,173 @@ section{position:relative}
   window.addEventListener('load', check);
   window.addEventListener('scroll', check, {passive:true});
   window.addEventListener('resize', check, {passive:true});
+})();
+</script>
+<script>
+(function(){
+  var nav=document.querySelector('.nav-shell');
+  if(!nav)return;
+  var onScroll=function(){nav.classList.toggle('stuck',window.scrollY>8)};
+  onScroll();
+  window.addEventListener('scroll',onScroll,{passive:true});
+})();
+</script>
+<script>
+/* ============================================================
+   PILLAR ORB — ported from the app's shaders/pillar_orb.frag
+   (the Concentration pillar switch). Same fbm/domain-warp body
+   and the same five pillar colours; owner-tuned values carried
+   over: speed 1.60, turbulence 1.15, film 1.00, milky 0.75.
+   Flutter-isms removed: no runtime_effect include, gl_FragCoord
+   in place of FlutterFragCoord().
+   ============================================================ */
+(function(){
+  var canvases = document.querySelectorAll('canvas.orb');
+  if(!canvases.length) return;
+
+  var VERT = '#version 300 es\n' +
+    'in vec2 p; void main(){ gl_Position = vec4(p,0.0,1.0); }';
+
+  var FRAG = '#version 300 es\n' + [
+  'precision highp float;',
+  'uniform vec2 uRes; uniform float uTime, uFilm, uMilk, uTurb;',
+  'out vec4 outColor;',
+  'float hash(vec3 p){ p = fract(p*0.3183099 + 0.1); p *= 17.0; return fract(p.x*p.y*p.z*(p.x+p.y+p.z)); }',
+  'float noise(vec3 x){',
+  '  vec3 i = floor(x); vec3 f = fract(x); f = f*f*(3.0-2.0*f);',
+  '  return mix(mix(mix(hash(i+vec3(0,0,0)),hash(i+vec3(1,0,0)),f.x), mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),',
+  '             mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x), mix(hash(i+vec3(0,1,1)),hash(i+vec3(1,1,1)),f.x),f.y), f.z);',
+  '}',
+  'float fbm(vec3 p){ float a = 0.5, s = 0.0; for(int i=0;i<4;i++){ s += a*noise(p); p = p*2.03 + 17.1; a *= 0.5; } return s; }',
+  'vec3 pillar(int i){',
+  '  if (i == 0) return vec3(0.420, 0.447, 0.502);',
+  '  if (i == 1) return vec3(0.961, 0.620, 0.043);',
+  '  if (i == 2) return vec3(0.937, 0.267, 0.267);',
+  '  if (i == 3) return vec3(0.545, 0.361, 0.965);',
+  '  return vec3(0.063, 0.725, 0.506);',
+  '}',
+  'vec3 film(float t){',
+  '  float x = fract(t) * 5.0;',
+  '  int i = int(floor(x));',
+  '  float f = smoothstep(0.15, 0.85, fract(x));',
+  '  return mix(pillar(i), pillar(int(mod(float(i + 1), 5.0))), f);',
+  '}',
+  'void main(){',
+  '  // WebGL origin is bottom-left, Flutter\'s is top-left: flip y so the',
+  '  // specular core and rim land exactly where they do in the app.',
+  '  vec2 fc = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y);',
+  '  vec2 uv = (fc - 0.5*uRes) / (0.5*min(uRes.x,uRes.y));',
+  '  float r = length(uv);',
+  '  float px = 2.0 / min(uRes.x, uRes.y);',
+  '  float edge = 1.0 - smoothstep(1.0 - 1.5*px, 1.0, r);',
+  '  if (edge <= 0.0) { outColor = vec4(0.0); return; }',
+  '  float z = sqrt(max(0.0, 1.0 - r*r));',
+  '  vec3 n = vec3(uv, z);',
+  '  float fres = pow(1.0 - z, 1.8);',
+  '  float t = uTime;',
+  '  vec3 q = n*1.6 + vec3(t*0.35, -t*0.28, t*0.45);',
+  '  vec3 warp = vec3(fbm(q + vec3(1.7, 9.2, t*0.6)), fbm(q + vec3(8.3, 2.8, -t*0.55)), fbm(q + vec3(4.1, t*0.5, 2.3)));',
+  '  vec3 warp2 = vec3(fbm(n*2.1 + warp*2.4*uTurb + vec3(t*0.4, 0.0, 1.3)), fbm(n*2.1 + warp*2.4*uTurb + vec3(5.2, -t*0.45, 0.0)), 0.0);',
+  '  float flow = fbm(n*2.0 + (warp + warp2)*2.2*uTurb + vec3(t*0.3));',
+  '  vec3 L = normalize(vec3(-0.35, 0.45, 0.82));',
+  '  float core = smoothstep(0.1, 1.0, dot(n, L));',
+  '  vec3 body = mix(vec3(0.80,0.80,0.79), vec3(0.99,0.985,0.97), core);',
+  '  body *= 0.9 + 0.1*flow;',
+  '  float hueT = flow*1.6 + fres*0.35 + t*0.08;',
+  '  vec3 irid = film(hueT);',
+  '  float band = smoothstep(0.3, 0.7, fbm(n*2.4 + (warp + warp2)*2.6*uTurb - vec3(t*0.25)));',
+  '  float iridAmt = clamp(uFilm * (0.35 + 0.35*fres + 0.55*band), 0.0, 1.0);',
+  '  vec3 col = mix(body, irid, iridAmt * (1.0 - uMilk*core*0.55));',
+  '  float pocket = smoothstep(0.6, 0.85, fbm(n*2.6 + warp2*2.0*uTurb + vec3(0.0, t*0.3, 0.0))) * smoothstep(0.2, 0.95, r);',
+  '  col = mix(col, col*vec3(0.25,0.18,0.32), pocket*0.65*uFilm);',
+  '  float spec = pow(max(dot(reflect(-L, n), vec3(0,0,1)), 0.0), 10.0);',
+  '  col += vec3(1.0)*spec*0.28;',
+  '  float rim = smoothstep(0.90, 0.985, r) * (1.0 - smoothstep(0.985, 1.0, r));',
+  '  col = mix(col, film(r*2.0 + flow + t*0.15), rim*0.55*uFilm);',
+  '  col *= mix(1.0, 0.86, smoothstep(0.8, 1.0, r));',
+  '  outColor = vec4(col * edge, edge);',
+  '}'].join('\n');
+
+  var SPEED = 1.60, TURB = 1.15, FILM = 1.00, MILK = 0.75;
+  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function build(canvas){
+    var gl = canvas.getContext('webgl2', {alpha:true, antialias:false, premultipliedAlpha:true});
+    if(!gl) return null;                       // CSS gradient fallback stays visible
+
+    function sh(type, src){
+      var o = gl.createShader(type);
+      gl.shaderSource(o, src); gl.compileShader(o);
+      if(!gl.getShaderParameter(o, gl.COMPILE_STATUS)) return null;
+      return o;
+    }
+    var vs = sh(gl.VERTEX_SHADER, VERT), fs = sh(gl.FRAGMENT_SHADER, FRAG);
+    if(!vs || !fs) return null;
+    var prog = gl.createProgram();
+    gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
+    if(!gl.getProgramParameter(prog, gl.LINK_STATUS)) return null;
+    gl.useProgram(prog);
+
+    var buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(prog, 'p');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+    var uRes = gl.getUniformLocation(prog, 'uRes'),
+        uTime = gl.getUniformLocation(prog, 'uTime');
+    gl.uniform1f(gl.getUniformLocation(prog, 'uFilm'), FILM);
+    gl.uniform1f(gl.getUniformLocation(prog, 'uMilk'), MILK);
+    gl.uniform1f(gl.getUniformLocation(prog, 'uTurb'), TURB);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+
+    function size(){
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var w = Math.max(1, Math.round(canvas.clientWidth  * dpr));
+      var h = Math.max(1, Math.round(canvas.clientHeight * dpr));
+      if(canvas.width !== w || canvas.height !== h){ canvas.width = w; canvas.height = h; }
+      gl.viewport(0,0,canvas.width,canvas.height);
+      gl.uniform2f(uRes, canvas.width, canvas.height);
+    }
+    function frame(t){
+      size();
+      gl.uniform1f(uTime, t * SPEED);
+      gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+    return {frame:frame, canvas:canvas};
+  }
+
+  var orbs = [];
+  for(var i=0;i<canvases.length;i++){
+    var o = build(canvases[i]);
+    if(o){ orbs.push(o); canvases[i].style.background = 'none'; }
+  }
+  if(!orbs.length) return;
+
+  if(still){ orbs.forEach(function(o){ o.frame(0); }); return; }
+
+  // only animate orbs that are actually on screen
+  var visible = new WeakSet();
+  if(window.IntersectionObserver){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ e.isIntersecting ? visible.add(e.target) : visible.delete(e.target); });
+    }, {rootMargin:'100px'});
+    orbs.forEach(function(o){ io.observe(o.canvas); });
+  } else {
+    orbs.forEach(function(o){ visible.add(o.canvas); });
+  }
+
+  var start = performance.now();
+  (function loop(now){
+    var t = (now - start) / 1000;
+    for(var i=0;i<orbs.length;i++){
+      if(!window.IntersectionObserver || visible.has(orbs[i].canvas)) orbs[i].frame(t);
+    }
+    requestAnimationFrame(loop);
+  })(start);
 })();
 </script>
 </body>

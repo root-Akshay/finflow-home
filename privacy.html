@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinFlow — Privacy Policy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--canvas:#F7F7F7;--card:#FFFFFF;--ink:#121212;--hair:#E5E5E5;--muted:#888888;
+--serif:'Instrument Serif',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;--mono:'Roboto Mono',ui-monospace,monospace;--r:24px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--canvas);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.shell{max-width:760px;margin:0 auto;padding:0 40px}
+.nav{display:flex;align-items:center;justify-content:space-between;height:88px}
+.wordmark{font-family:var(--serif);font-size:30px;color:var(--ink);text-decoration:none;line-height:1}
+.back{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-decoration:none}
+.back:hover{color:var(--ink)}
+.doc{background:#fff;border:1px solid var(--hair);border-radius:var(--r);padding:64px 56px;margin-bottom:64px}
+.doc h1{font-family:var(--serif);font-weight:400;font-size:clamp(34px,4vw,52px);line-height:1.06;letter-spacing:-0.2px;margin-bottom:8px}
+.doc h2{font-family:var(--serif);font-weight:400;font-size:27px;line-height:1.2;margin:44px 0 14px;letter-spacing:-0.2px}
+.doc h3{font-family:var(--sans);font-weight:600;font-size:15px;margin:28px 0 10px}
+.doc p{font-size:15.5px;line-height:1.65;color:#333;margin-bottom:14px}
+.doc ul{margin:0 0 18px 0;padding-left:20px}
+.doc li{font-size:15.5px;line-height:1.65;color:#333;margin-bottom:10px}
+.doc strong{font-weight:600;color:var(--ink)}
+.doc code{font-family:var(--mono);font-size:13px;background:#F2F2F2;padding:1px 5px;border-radius:4px}
+.doc a{color:var(--ink);text-underline-offset:2px}
+.doc h1 + p{font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:32px}
+.footer{border-top:1px solid var(--hair);padding:28px 0 40px;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between}
+.footer a{color:var(--muted);text-decoration:none}
+.footer a:hover{color:var(--ink)}
+@media(max-width:760px){.shell{padding:0 20px}.doc{padding:40px 24px}.footer{flex-direction:column;gap:12px;text-align:center}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="nav">
+    <a href="index.html" class="wordmark">Finflow</a>
+    <a href="index.html" class="back">&larr; Back to site</a>
+  </nav>
+  <article class="doc">
+<h1>FinFlow Privacy Policy</h1>
+<p><strong>Effective date: 2026-09-19</strong></p>
+<p>FinFlow is a personal finance app for a single user. It reads your bank&#x27;s SMS/notification alerts on your phone, turns them into categorized transactions, and shows you insights about your own spending. This document explains, plainly, what the app collects, where it lives, and what — if anything — leaves your device.</p>
+<h2>Short version</h2>
+<ul>
+<li>Your transaction data (amounts, merchants, categories, balances) is parsed from bank notifications on your phone and stored <strong>only in a local SQLite database on your device</strong>. It is not uploaded to any server we run.</li>
+<li>Creating an account (phone number sign-in) is required to use the app. That creates a profile in Google Firebase, used for sign-in and for two optional social features (Friends and Shared Stories). Your day-to-day transaction list, categorization, and insights do not go through this account.</li>
+<li>The AI-generated narrative insight feature is currently <strong>inactive</strong> in this build — no transaction data is sent to Google Gemini or any other AI provider.</li>
+<li>Background location is used only to tag *your own* transactions with a coarse location (e.g. which store you were near) so the app can group repeat visits. It is stored locally and is not uploaded anywhere.</li>
+</ul>
+<h2>What we collect and why</h2>
+<h3>1. Bank SMS / notification content</h3>
+<p>FinFlow reads notifications posted by your default messaging app (Google Messages, Samsung Messages, etc.) using Android&#x27;s Notification Listener permission. It looks only at notifications from apps on a small allow-list of messaging packages, and within those, only at messages that look like bank/DLT transaction alerts (a three-stage filter: sender-format check, bank allow-list check, and a transaction-shape check). Non-matching notifications (OTPs, promotions, other apps&#x27; notifications) are ignored and not stored. Matching messages are parsed into structured records — amount, merchant/payee, date, account/card last 4 digits, transaction type — and saved to the local database. The original notification text is not persisted long-term as a separate copy beyond what&#x27;s needed to parse it and (for undeliverable/rejected messages) short debug buffers used to improve parsing, which also stay local.</p>
+<p><strong>Why:</strong> this is how FinFlow builds your transaction history without you manually entering anything — the core of the product.</p>
+<h3>2. Notification access permission</h3>
+<p>Required for #1. Android requires this to be a system-level &quot;Notification Access&quot; grant, which — as an unavoidable side effect of how the permission works — technically lets the listener service see all notifications system-wide. FinFlow&#x27;s code only acts on notifications from the messaging-app allow-list described above; it does not read, store, or transmit content from other apps&#x27; notifications (email, chat, social, etc.).</p>
+<h3>3. Location (coarse, background)</h3>
+<p>FinFlow can read your device&#x27;s <strong>already-cached</strong> location (from <code>LocationManager</code>, not a live GPS request) at the moment a bank SMS/transaction arrives, so it can associate a transaction with an approximate place (rounded to a geohash cell of roughly 20–40 meters). This requires the &quot;Allow all the time&quot; (background) location permission, because transactions can arrive while the app isn&#x27;t open, and Android denies location reads to a background component without it. FinFlow never requests a fresh GPS fix and never tracks your location continuously or on any schedule — only opportunistically, tied to a transaction event. This location data is stored in the local database only and is not transmitted anywhere.</p>
+<h3>4. Account profile (phone sign-in)</h3>
+<p>FinFlow requires phone-number sign-in (Firebase Authentication with OTP) to use the app. Signing in creates a profile document containing your phone number, name, email (if provided), and answers you give during onboarding (employment status, income range, primary financial goal). This is stored in Google Firestore (Google Cloud), associated with your Firebase account, and cached locally on-device for faster loads. This profile is separate from your transaction data — the transactions themselves are not written to this account or to Firestore.</p>
+<h3>5. Push-notification token</h3>
+<p>Once signed in, FinFlow registers a Firebase Cloud Messaging token for your device (used to notify you if a friend adds a shared expense). This registration happens automatically for every signed-in user, not only those who use Friends/Stories.</p>
+<h3>6. Optional social features (Friends, Shared Stories)</h3>
+<p>If you choose to use the &quot;People&quot;/Friends feature or create a Shared Story (a group expense ledger), the following is written to Firestore so other people you&#x27;ve linked with can see it:</p>
+<ul>
+<li>A public &quot;card&quot; with your display name and a 6-digit friend code.</li>
+<li>Friendship links (which accounts you&#x27;re connected to).</li>
+<li>For expenses you add to a *shared* story: the amount, a label, category, timestamp, and how it&#x27;s split — but not a link back to the underlying bank transaction, and not any of your other (non-shared) transactions.</li>
+</ul>
+<p>If you never use these features, none of this is created or sent.</p>
+<h3>7. Device permissions used, and why</h3>
+<ul>
+<li><strong>Notification access</strong> — read bank alert notifications (§1–2).</li>
+<li><strong>Background/fine/coarse location</strong> — tag transactions with place (§3).</li>
+<li><strong>Post notifications</strong> — show FinFlow&#x27;s own local notifications (spending nudges, reminders).</li>
+<li><strong>Foreground service</strong> — keeps the app&#x27;s listener alive in the background so notifications aren&#x27;t missed after the app is swiped away.</li>
+<li><strong>Ignore battery optimizations</strong> — same purpose, prevents Android from killing the background listener.</li>
+</ul>
+<h2>What is NOT collected or sent anywhere</h2>
+<ul>
+<li>Your transaction history, categorization, balances, and behavioral insights are <strong>not</strong> uploaded to any server we operate — they live in a local SQLite database on your device only.</li>
+<li>The AI narrative-insight feature (Google Gemini) is <strong>currently inactive</strong> in this build: the API key is deliberately not shipped in the app package, so calls to Gemini fail immediately and the app falls back to its local, rules-based summaries instead. No transaction data is sent to Gemini or any other AI service in this build.</li>
+<li>There is no analytics or crash-reporting SDK in the app (no Firebase Analytics, no Crashlytics, no third-party trackers).</li>
+<li>Location data is never uploaded — it stays in the local database.</li>
+</ul>
+<h2>Where your data lives</h2>
+<ul>
+<li><strong>On your device:</strong> transactions, categorization, balances, insights, entity/merchant history, and location tags — a local SQLite database, private to the app.</li>
+<li><strong>In Google Firebase (cloud):</strong> your account profile and a push-notification token (created for every user, since sign-in is required to use the app) — and, only if you opt in, your Friends list and any expenses you add to a Shared Story.</li>
+</ul>
+<h2>Data retention</h2>
+<ul>
+<li>Local data stays on your device until you delete it (via the app&#x27;s &quot;Clear All Data&quot; option, which removes your imported transactions) or uninstall the app, which removes the entire local database.</li>
+<li>Cloud data (Firebase account profile, friend links, shared-story expenses) persists until you ask us to delete it (see below) — there is currently no in-app self-service option to delete your Firebase account or the data associated with it.</li>
+</ul>
+<h2>Deleting your data</h2>
+<ul>
+<li><strong>In-app &quot;Clear All Data&quot; (Profile → Clear All Data):</strong> deletes your imported transactions, location tags, entity/merchant history, behavioral insights, cards, bank accounts, autopays, and related derived tables. It deliberately keeps your admin identity record and any shared-story/expense records you authored (so they survive a re-import). It does not delete a small on-device diagnostic buffer of recently rejected SMS text (used to improve parsing) — that buffer is cleared by uninstalling the app.</li>
+<li><strong>Uninstalling the app</strong> removes the entire local database, including that diagnostic buffer.</li>
+<li><strong>Cloud data (account profile, friend links, shared expenses, push token):</strong> there is currently no in-app self-service option to delete this. Email us at the address below and we will delete your Firebase Authentication account, your Firestore profile document, and any friend/story records associated with your account.</li>
+</ul>
+<h2>Third parties</h2>
+<p>FinFlow uses Google Firebase (Authentication, Firestore, Cloud Messaging) to support sign-in and the optional social features described above. No other third-party service receives your data in this build.</p>
+<h2>Changes to this policy</h2>
+<p>If what the app collects or where it sends data changes in a future release, this document will be updated and the effective date revised.</p>
+<h2>Contact</h2>
+<p>Questions, concerns, or data-deletion requests: <strong><a href="mailto:xakadav50@gmail.com">xakadav50@gmail.com</a></strong></p>
+  </article>
+  <footer class="footer">
+    <span>&copy; FINFLOW 2026</span>
+    <a href="index.html">FINFLOW.APP</a>
+  </footer>
+</div>
+</body>
+</html>
