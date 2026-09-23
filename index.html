@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FinFlow — A memory layer for your financial life.</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="256x256" href="finflow-icon-256.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#F7F7F7">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -347,6 +351,19 @@ section{position:relative}
   background:radial-gradient(circle at 34% 30%, #FCFBF7 0%, #E9C77A 38%, #E14444 62%, #8B5CF6 82%, #10B981 100%);
 }
 
+/* app mark — the ff. icon, same art as the launcher icon */
+.mark{
+  display:block;
+  border-radius:22%;            /* app-icon squircle, not the 24px card radius */
+  border:1px solid rgba(0,0,0,.06);
+}
+.mark-hero{width:56px;height:56px;margin-bottom:22px}
+.dl-card .mark{width:76px;height:76px;margin:0 auto 26px}
+@media(max-width:600px){
+  .mark-hero{width:48px;height:48px;margin-bottom:18px}
+  .dl-card .mark{width:64px;height:64px}
+}
+
 /* ============ DOWNLOAD ============ */
 .download{padding-top:24px;padding-bottom:40px}
 .dl-card{max-width:760px;margin:0 auto;text-align:center;padding:64px 56px}
@@ -499,6 +516,7 @@ section{position:relative}
 <section class="shell">
   <div class="hero">
     <div class="hero-copy reveal">
+      <img src="finflow-icon-256.png" alt="FinFlow" width="56" height="56" class="mark mark-hero">
       <div class="eyebrow hero-eyebrow">FINANCIAL INTELLIGENCE · MEMORY · INDIA</div>
       <h1>Your money,<br>finally understood.</h1>
       <p class="hero-sub">FinFlow reads the financial signals already flowing through your phone — payments, places, and everyday moments — and tells you what actually happened. Not just what you spent.</p>
@@ -782,6 +800,7 @@ section{position:relative}
 <!-- ============ DOWNLOAD ============ -->
 <section class="shell download" id="download">
   <div class="card dl-card reveal">
+    <img src="finflow-icon-256.png" alt="FinFlow app icon" width="76" height="76" class="mark">
     <div class="eyebrow" style="margin-bottom:24px">ANDROID · DIRECT DOWNLOAD · v1.1.0</div>
     <h2>Put it on your phone.</h2>
     <p>FinFlow isn't on the Play Store yet. Download it directly — it reads your bank alerts on-device and starts building your history from the first message.</p>
