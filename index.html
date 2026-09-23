@@ -101,14 +101,15 @@ section{position:relative}
 .btn-ghost:hover{border-color:var(--ink)}
 
 /* ============ NAV ============ */
-.nav-shell{
+.nav-bar{
   position:sticky;top:0;z-index:20;
+  width:100%;
   background:rgba(247,247,247,.82);
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   border-bottom:1px solid transparent;
   transition:border-color .3s ease;
 }
-.nav-shell.stuck{border-bottom-color:var(--hair)}
+.nav-bar.stuck{border-bottom-color:var(--hair)}
 .nav{
   position:relative;z-index:3;
   display:flex;align-items:center;justify-content:space-between;
@@ -479,7 +480,8 @@ section{position:relative}
 <div class="grid-bg" id="gridBg"></div>
 
 <!-- ============ NAV ============ -->
-<div class="shell nav-shell">
+<div class="nav-bar">
+<div class="shell">
   <nav class="nav">
     <a href="#" class="wordmark">Finflow</a>
     <div style="display:flex;align-items:center;gap:14px">
@@ -490,6 +492,7 @@ section{position:relative}
     </a>
     </div>
   </nav>
+</div>
 </div>
 
 <!-- ============ HERO ============ -->
@@ -950,7 +953,7 @@ section{position:relative}
 </script>
 <script>
 (function(){
-  var nav=document.querySelector('.nav-shell');
+  var nav=document.querySelector('.nav-bar');
   if(!nav)return;
   var onScroll=function(){nav.classList.toggle('stuck',window.scrollY>8)};
   onScroll();
