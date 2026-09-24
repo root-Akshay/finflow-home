@@ -103,6 +103,8 @@ section{position:relative}
 .btn-primary:hover{background:#000}
 .btn-ghost{background:transparent;color:var(--ink);border-color:var(--hair)}
 .btn-ghost:hover{border-color:var(--ink)}
+/* .btn is already inline-flex with gap:9px, so the dot spaces itself */
+.btn-new::before{content:"";width:6px;height:6px;border-radius:50%;background:#FFCC00;flex:0 0 auto}
 
 /* ============ NAV ============ */
 .nav-bar{
@@ -530,6 +532,7 @@ section{position:relative}
       <p class="hero-sub">FinFlow reads the financial signals already flowing through your phone: payments, places, and everyday moments. It tells you what actually happened, not just what you spent.</p>
       <div class="hero-ctas">
         <a href="#download" class="btn btn-primary"><canvas class="orb" aria-hidden="true"></canvas>Download for Android <span class="dl-size">&middot; 29 MB</span></a>
+        <a href="releases.html" class="btn btn-ghost btn-new">What&#x27;s new</a>
         <a href="https://discord.gg/vmnSw62bq" target="_blank" rel="noopener" class="btn btn-ghost">Join the Discord</a>
         <a href="#how" class="btn btn-ghost">See how it works</a>
       </div>
